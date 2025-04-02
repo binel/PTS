@@ -204,6 +204,7 @@ Columns:
 - DisplayName (TEXT) (NOT NULL) 
 - Description (TEXT) - some description of a user, useful for automated users
 - CreatedAt (INTEGER) (NOT NULL) - unix timestamp 
+- UpdatedAt (INTEGER) (NOT NULL) - unix timestamp
 - PasswordHashVersion (INTEGER) (NOT NULL) - what version of the password hashing algorithm was used for this password
 - PasswordHash (TEXT) (NOT NULL) - hash of the password of the user 
 - PasswordUpdatedAt (INTEGER) (NOT NULL) - unix timestamp 
