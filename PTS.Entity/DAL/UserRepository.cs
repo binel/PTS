@@ -8,6 +8,16 @@ public class UserRepository {
 
     private SqliteConnection _connection; 
 
+    private const string ID_COL = "Id";
+    private const string USERNAME_COL = "Username";
+    private const string DISPLAY_NAME_COL = "DisplayName";
+    private const string DESCRIPTION_COL = "Description";
+    private const string CREATED_AT_COL = "CreatedAt";
+    private const string PASSWORD_HASH_VERSION_COL = "PasswordHashVersion";
+    private const string PASSWORD_HASH_COL = "PasswordHash";
+    private const string PASSWORD_UPDATED_AT_COL = "PasswordUpdatedAt";
+    private const string LAST_LOGIN_AT_COL = "LastLoginAt";
+
     public UserRepository(SqliteConnection connection) {
         _connection = connection;
     }
@@ -42,6 +52,8 @@ public class UserRepository {
         insertCmd.Parameters.AddWithValue("$passwordHash", user.PasswordHash);
         insertCmd.Parameters.AddWithValue("$passwordUpdatedAt", DateTimeConverter.ToUnix(user.PasswordUpdatedAt));
         insertCmd.Parameters.AddWithValue("$lastLoginAt", DateTimeConverter.ToUnix(user.LastLoginAt));
+
+        insertCmd.ExecuteNonQuery();
     }
 
     public User GetUser(int userId) {
@@ -62,34 +74,44 @@ public class UserRepository {
         selectCmd.Parameters.AddWithValue("$userId", userId);
 
         using var reader = selectCmd.ExecuteReader();
-        bool read = false;
-        User user = null;
-        while (reader.Read())
-        {
-            if (read == false) {
-                read = true;
-            }
-            else {
-                throw new InvalidOperationException($"Multiple users exist with user Id {userId}");
-            }
-
-            user = new User {
-                Id = reader.GetInt32(0),
-                Username = reader.GetString(1),
-                Description = reader.GetString(2),
-                CreatedAt = DateTimeConverter.FromUnix(reader.GetInt32(3)),
-                PasswordHashVersion = reader.GetInt32(4),
-                PasswordHash = reader.GetString(5),
-                PasswordUpdatedAt = DateTimeConverter.FromUnix(reader.GetInt32(6)),
-                LastLoginAt = DateTimeConverter.FromUnix(reader.GetInt32(7))
-            };
-        }
+        
+        User user = ReadUserFromReader(reader);
 
         return user; 
     }
 
+    public int GetUserCount() {
+        var selectCmd = _connection.CreateCommand();
+        selectCmd.CommandText = 
+        @"SELECT COUNT(*) FROM Users";
+
+        using var reader = selectCmd.ExecuteReader();
+        while (reader.Read())
+        {
+            return reader.GetInt32(0);
+        }
+        throw new InvalidOperationException("Could not get count of users");
+    }
+
     public List<User> GetAllUsers() {
-        throw new NotImplementedException();
+        var selectCmd = _connection.CreateCommand();
+        selectCmd.CommandText = 
+        @"SELECT Id, 
+            Username,
+            DisplayName,
+            Description,
+            CreatedAt,
+            PasswordHashVersion,
+            PasswordHash,
+            PasswordUpdatedAt,
+            LastLoginAt
+          FROM Users";
+
+        using var reader = selectCmd.ExecuteReader();
+
+        var users = ReadUsersFromReader(reader);
+
+        return users; 
     }
 
     public User GetUserByUsername(string username) {
@@ -110,49 +132,106 @@ public class UserRepository {
         selectCmd.Parameters.AddWithValue("$username", username);
 
         using var reader = selectCmd.ExecuteReader();
-        bool read = false;
-        User user = null;
-        while (reader.Read())
-        {
-            if (read == false) {
-                read = true;
-            }
-            else {
-                throw new InvalidOperationException($"Multiple users exist with username {username}");
-            }
 
-            user = new User {
-                Id = reader.GetInt32(0),
-                Username = reader.GetString(1),
-                Description = reader.GetString(2),
-                CreatedAt = DateTimeConverter.FromUnix(reader.GetInt32(3)),
-                PasswordHashVersion = reader.GetInt32(4),
-                PasswordHash = reader.GetString(5),
-                PasswordUpdatedAt = DateTimeConverter.FromUnix(reader.GetInt32(6)),
-                LastLoginAt = DateTimeConverter.FromUnix(reader.GetInt32(7))
-            };
-        }
+        var user = ReadUserFromReader(reader);
 
         return user; 
     }
 
-    public void SetUserPassword(int userId, string hash) {
-        throw new NotImplementedException(); 
+    public void SetUserPassword(int userId, string hash, long hashVersion) {
+        var insertCmd = _connection.CreateCommand();
+        insertCmd.CommandText = 
+        @"UPDATE Users 
+          SET PasswordHash = $passwordHash,
+            PasswordHashVersion = $passwordHashVersion,
+            PasswordUpdatedAt = $passwordUpdatedAt
+          WHERE Id=$userId
+          ";
+
+        DateTime updateTime = DateTime.UtcNow;
+
+        insertCmd.Parameters.AddWithValue("$userId", userId);
+        insertCmd.Parameters.AddWithValue("$passwordHashVersion", hashVersion);
+        insertCmd.Parameters.AddWithValue("$passwordHash", hash);
+        insertCmd.Parameters.AddWithValue("$passwordUpdatedAt", DateTimeConverter.ToUnix(updateTime));
+
+        insertCmd.ExecuteNonQuery();        
     }
 
     public void SetUserLastLoginToNow(int userId) {
-        throw new NotImplementedException();
+        var insertCmd = _connection.CreateCommand();
+        insertCmd.CommandText = 
+        @"UPDATE Users 
+          SET LastLoginAt = $lastLoginAt
+          WHERE Id=$userId
+          ";
+
+        DateTime updateTime = DateTime.UtcNow;
+
+        insertCmd.Parameters.AddWithValue("$userId", userId);
+        insertCmd.Parameters.AddWithValue("$lastLoginAt", DateTimeConverter.ToUnix(updateTime));
+
+        insertCmd.ExecuteNonQuery();  
     }
 
     public void SetUserDisplayName(int userId, string displayName) {
-        throw new NotImplementedException();
+        var insertCmd = _connection.CreateCommand();
+        insertCmd.CommandText = 
+        @"UPDATE Users 
+          SET DisplayName = $displayName
+          WHERE Id=$userId
+          ";
+
+        DateTime updateTime = DateTime.UtcNow;
+
+        insertCmd.Parameters.AddWithValue("$userId", userId);
+        insertCmd.Parameters.AddWithValue("$displayName", displayName);
+
+        insertCmd.ExecuteNonQuery();  
     }
 
     public void SetUserUsername(int userId, string username) {
-        throw new NotImplementedException();
+        var insertCmd = _connection.CreateCommand();
+        insertCmd.CommandText = 
+        @"UPDATE Users 
+          SET Username = $username
+          WHERE Id=$userId
+          ";
+
+        DateTime updateTime = DateTime.UtcNow;
+
+        insertCmd.Parameters.AddWithValue("$userId", userId);
+        insertCmd.Parameters.AddWithValue("$username", username);
+
+        insertCmd.ExecuteNonQuery();  
     }
 
-    public void DeleteUser(int userId) {
-        throw new NotImplementedException();
+    private User ReadUserFromReader(SqliteDataReader reader) {
+        reader.Read();
+        return ReadUserWithoutAdvance(reader);
+    }
+
+    private List<User> ReadUsersFromReader(SqliteDataReader reader) {
+        List<User> users = new List<User>();
+        while (reader.Read()) {
+            users.Add(ReadUserWithoutAdvance(reader));
+        }
+
+        return users;
+    }
+
+    private User ReadUserWithoutAdvance(SqliteDataReader reader) {
+        var user = new User {
+            Id = (long)reader[ID_COL],
+            Username = (string)reader[USERNAME_COL],
+            DisplayName = (string)reader[DISPLAY_NAME_COL],
+            Description = (string)reader[DESCRIPTION_COL],
+            CreatedAt = DateTimeConverter.FromUnix((long)reader[CREATED_AT_COL]),
+            PasswordHashVersion = (long)reader[PASSWORD_HASH_VERSION_COL],
+            PasswordHash = (string)reader[PASSWORD_HASH_COL],
+            PasswordUpdatedAt = DateTimeConverter.FromUnix((long)reader[PASSWORD_UPDATED_AT_COL]),
+            LastLoginAt = DateTimeConverter.FromUnix((long)reader[LAST_LOGIN_AT_COL])
+        };
+        return user;
     }
 }

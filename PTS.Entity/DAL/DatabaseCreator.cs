@@ -1,6 +1,15 @@
 namespace PTS.Entity.DAL;
 
-public static class DatabaseCreator {
+using Microsoft.Data.Sqlite;
+
+public class DatabaseCreator {
+    
+    private SqliteConnection _connection;
+
+    public DatabaseCreator(SqliteConnection connection) {
+        _connection = connection;
+    }
+
     /*
     * Version Summaries 
     *
@@ -9,7 +18,7 @@ public static class DatabaseCreator {
     public const int MIN_DB_VERSION = 1;
     public const int CURRENT_DB_VERSION = 1; 
 
-    public static void CreateDatabase(int version) {
+    public void CreateDatabase(int version) {
         if (version < MIN_DB_VERSION) {
             throw new ArgumentException($"Cannot create database with version less than {MIN_DB_VERSION}");
         }
@@ -27,8 +36,8 @@ public static class DatabaseCreator {
         throw new NotImplementedException();
     }
 
-    public static void CreateTicketTable(int version) {
-        var tableCmd = Database.GetConnection().CreateCommand();
+    public void CreateTicketTable(int version) {
+        var tableCmd = _connection.CreateCommand();
 
         tableCmd.CommandText = 
         @"
@@ -77,8 +86,8 @@ public static class DatabaseCreator {
         throw new NotImplementedException();
     }
 
-    public static void CreateUserTable(int version) {
-      var tableCmd = Database.GetConnection().CreateCommand();
+    public void CreateUserTable(int version) {
+      var tableCmd = _connection.CreateCommand();
 
         tableCmd.CommandText = 
         @"

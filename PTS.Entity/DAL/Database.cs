@@ -2,21 +2,21 @@ namespace PTS.Entity.DAL;
 
 using Microsoft.Data.Sqlite;
 
-public static class Database {
-    private static string _connectionString = "DataSource=:memory:";
+public class Database {
+    private string _connectionString = "DataSource=:memory:";
 
-    public static SqliteConnection Connection;
+    private SqliteConnection _connection;
 
-    public static SqliteConnection GetConnection() {
-        if (Connection == null) {
-            Connection = new SqliteConnection(_connectionString);
+    public SqliteConnection GetConnection() {
+        if (_connection == null) {
+            _connection = new SqliteConnection(_connectionString);
         }
 
-        if (Connection.State == System.Data.ConnectionState.Closed) {
-            Connection.Open();
+        if (_connection.State == System.Data.ConnectionState.Closed) {
+            _connection.Open();
         }
 
-        return Connection;
+        return _connection;
     }
 
 }

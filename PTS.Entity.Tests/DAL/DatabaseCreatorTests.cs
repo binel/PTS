@@ -7,6 +7,8 @@ public class Tests
     [Test]
     public void BasicCreationTest()
     {
-        DatabaseCreator.CreateDatabase(1);
+        Database db = new Database();
+        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        creator.CreateDatabase(1);
     }
 }

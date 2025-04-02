@@ -1,7 +1,7 @@
 namespace PTS.Entity.Domain;
 
 public class User {
-    public int Id {get; set;}
+    public long Id {get; set;}
 
     public string Username {get; set;}
 
@@ -13,7 +13,7 @@ public class User {
     
     public DateTime UpdatedAt {get; set;}
 
-    public int PasswordHashVersion {get; set;}
+    public long PasswordHashVersion {get; set;}
 
     public string PasswordHash {get; set;}
 
