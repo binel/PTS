@@ -1,12 +1,100 @@
 namespace PTS.Entity.DAL;
 
 using PTS.Entity.Domain;
+using Microsoft.Data.Sqlite;
+using PTS.Entity.Util;
 
 public class TicketRepository {
     // TODO complete 
 
+    private SqliteConnection _connection;
+
+    public TicketRepository(SqliteConnection connection) {
+        _connection = connection;
+    }
+
     public void AddTicket(Ticket ticket) {
-        throw new NotImplementedException();
+        var insertCmd = _connection.CreateCommand();
+        insertCmd.CommandText = 
+        @"INSERT INTO Tickets (
+            Identifier, 
+            Title,
+            Description,
+            Priority,
+            AuthorKey,
+            Status,
+            HasComments,
+            HasRelationships,
+            HasTags,
+            HasWorkHistory,
+            ProjectKey,
+            CreatedAt,
+            UpdatedAt,
+            ResolvedAt)
+          VALUES (
+           $identifier,
+           $title,
+           $description,
+           $priority,
+           $authorKey,
+           $status,
+           $hasComments,
+           $hasRelationships,
+           $hasTags,
+           $hasWorkHistory,
+           $projectKey,
+           $createdAt,
+           $updatedAt,
+           $resolvedAt)";
+
+        insertCmd.Parameters.AddWithValue("$identifier", ticket.Identifier);
+        insertCmd.Parameters.AddWithValue("$title", ticket.Title);
+        insertCmd.Parameters.AddWithValue("$description", ticket.Description);
+        insertCmd.Parameters.AddWithValue("$priority", (int)ticket.Priority);
+        insertCmd.Parameters.AddWithValue("$authorKey", ticket.Author.Id);
+        insertCmd.Parameters.AddWithValue("$status", (int)ticket.Status);
+        insertCmd.Parameters.AddWithValue("$hasComments", ticket.Comments.Count() > 0 ? 1 : 0);
+        insertCmd.Parameters.AddWithValue("$hasRelationships", ticket.Relationships.Count() > 0 ? 1 : 0);
+        insertCmd.Parameters.AddWithValue("$hasTags", ticket.Tags.Count() > 0 ? 1 : 0);
+        insertCmd.Parameters.AddWithValue("$hasWorkHistory", ticket.WorkHistory.Count() > 0 ? 1 : 0);
+
+        if (ticket.Project != null) {
+            insertCmd.Parameters.AddWithValue("$projectKey", ticket.Project.Id);
+        } else {
+            insertCmd.Parameters.AddWithValue("$projectKey", null);
+        }
+
+
+        insertCmd.Parameters.AddWithValue("$createdAt", DateTimeConverter.ToUnix(ticket.CreatedAt));
+        insertCmd.Parameters.AddWithValue("$updatedAt", DateTimeConverter.ToUnix(ticket.UpdatedAt));
+
+        if (ticket.ResolvedAt.HasValue) {
+            insertCmd.Parameters.AddWithValue("$resolvedAt", DateTimeConverter.ToUnix(ticket.ResolvedAt.Value));
+        } else {
+            insertCmd.Parameters.AddWithValue("$resolvedAt", null);         
+        }
+
+        try {
+            insertCmd.ExecuteNonQuery();
+        } catch (Exception e) {
+            SqliteUtils.PrintInsertCommandParametersForError(e, insertCmd);
+            SqliteUtils.PrintTableSchema(_connection, "Tickets");
+            throw;      
+        }
+        
+    }
+
+    public int GetTicketCount() {
+        var selectCmd = _connection.CreateCommand();
+        selectCmd.CommandText = 
+        @"SELECT COUNT(*) FROM Tickets";
+
+        using var reader = selectCmd.ExecuteReader();
+        while (reader.Read())
+        {
+            return reader.GetInt32(0);
+        }
+        throw new InvalidOperationException("Could not get count of tickets");       
     }
 
     public void UpdateTicketTitle(int id, string title) {

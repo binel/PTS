@@ -56,7 +56,7 @@ public class DatabaseCreator {
             ProjectKey INTEGER,
             CreatedAt INTEGER NOT NULL,
             UpdatedAt INTEGER NOT NULL,
-            ResolvedAt INTEGER NOT NULL
+            ResolvedAt INTEGER
         )";
 
         tableCmd.ExecuteNonQuery();

@@ -13,9 +13,13 @@ public class Ticket {
 
     public Priority Priority {get; set;}
 
+    public User Author {get; set;}
+
     public Status Status {get; set;}
 
     public List<Comment> Comments {get; set;} = new List<Comment>();
+
+    public List<Relationship> Relationships {get; set;} = new List<Relationship>();
 
     public List<Tag> Tags {get; set;} = new List<Tag>();
 
@@ -28,4 +32,6 @@ public class Ticket {
     public DateTime? ResolvedAt {get; set;}
 
     public Project? Project {get; set;}
+
+    public List<WorkHistory> WorkHistory {get; set;} = new List<WorkHistory>();
 }
