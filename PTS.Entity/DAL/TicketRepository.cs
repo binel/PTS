@@ -15,8 +15,148 @@ public class TicketRepository {
 
     public void AddTicket(Ticket ticket) {
         var insertCmd = _connection.CreateCommand();
-        insertCmd.CommandText = 
-        @"INSERT INTO Tickets (
+        
+        if (ticket.Project == null && ticket.ResolvedAt == null) {
+            insertCmd.CommandText = GetInsertCommand();
+        }
+        else if (ticket.Project != null && ticket.ResolvedAt == null) {
+            insertCmd.CommandText = GetInsertCommandWithProjectKey();
+        }
+        else if (ticket.Project == null && ticket.ResolvedAt != null) {
+            insertCmd.CommandText = GetInsertCommandWithResolvedAt();
+        }
+        else {
+            insertCmd.CommandText = GetInsertCommandWithAllColumns();
+        }
+
+        insertCmd.Parameters.AddWithValue("$identifier", ticket.Identifier);
+        insertCmd.Parameters.AddWithValue("$title", ticket.Title);
+        insertCmd.Parameters.AddWithValue("$description", ticket.Description);
+        insertCmd.Parameters.AddWithValue("$priority", (int)ticket.Priority);
+        insertCmd.Parameters.AddWithValue("$authorKey", ticket.Author.Id);
+        insertCmd.Parameters.AddWithValue("$status", (int)ticket.Status);
+        insertCmd.Parameters.AddWithValue("$hasComments", ticket.Comments.Count() > 0 ? 1 : 0);
+        insertCmd.Parameters.AddWithValue("$hasRelationships", ticket.Relationships.Count() > 0 ? 1 : 0);
+        insertCmd.Parameters.AddWithValue("$hasTags", ticket.Tags.Count() > 0 ? 1 : 0);
+        insertCmd.Parameters.AddWithValue("$hasWorkHistory", ticket.WorkHistory.Count() > 0 ? 1 : 0);
+
+        if (ticket.Project != null) {
+            insertCmd.Parameters.AddWithValue("$projectKey", ticket.Project.Id);
+        } else {
+            insertCmd.Parameters.AddWithValue("$projectKey", null);
+        }
+
+        insertCmd.Parameters.AddWithValue("$createdAt", DateTimeConverter.ToUnix(ticket.CreatedAt));
+        insertCmd.Parameters.AddWithValue("$updatedAt", DateTimeConverter.ToUnix(ticket.UpdatedAt));
+
+        if (ticket.ResolvedAt.HasValue) {
+            insertCmd.Parameters.AddWithValue("$resolvedAt", DateTimeConverter.ToUnix(ticket.ResolvedAt.Value));
+        } else {
+            insertCmd.Parameters.AddWithValue("$resolvedAt", null);         
+        }
+        try {
+            insertCmd.ExecuteNonQuery();
+        } catch (Exception e) {
+            SqliteUtils.PrintInsertCommandParametersForError(e, insertCmd);
+            SqliteUtils.PrintTableSchema(_connection, "Tickets");
+            throw;      
+        }
+        
+    }
+
+    private string GetInsertCommand() {
+        return @"INSERT INTO Tickets (
+            Identifier, 
+            Title,
+            Description,
+            Priority,
+            AuthorKey,
+            Status,
+            HasComments,
+            HasRelationships,
+            HasTags,
+            HasWorkHistory,
+            CreatedAt,
+            UpdatedAt)
+          VALUES (
+           $identifier,
+           $title,
+           $description,
+           $priority,
+           $authorKey,
+           $status,
+           $hasComments,
+           $hasRelationships,
+           $hasTags,
+           $hasWorkHistory,
+           $createdAt,
+           $updatedAt)";
+    }
+
+    private string GetInsertCommandWithProjectKey() {
+        return @"INSERT INTO Tickets (
+            Identifier, 
+            Title,
+            Description,
+            Priority,
+            AuthorKey,
+            Status,
+            HasComments,
+            HasRelationships,
+            HasTags,
+            HasWorkHistory,
+            ProjectKey,
+            CreatedAt,
+            UpdatedAt)
+          VALUES (
+           $identifier,
+           $title,
+           $description,
+           $priority,
+           $authorKey,
+           $status,
+           $hasComments,
+           $hasRelationships,
+           $hasTags,
+           $hasWorkHistory,
+           $projectKey,
+           $createdAt,
+           $updatedAt)";
+    }
+
+    private string GetInsertCommandWithResolvedAt() {
+        return @"INSERT INTO Tickets (
+            Identifier, 
+            Title,
+            Description,
+            Priority,
+            AuthorKey,
+            Status,
+            HasComments,
+            HasRelationships,
+            HasTags,
+            HasWorkHistory,
+            CreatedAt,
+            UpdatedAt,
+            ResolvedAt)
+          VALUES (
+           $identifier,
+           $title,
+           $description,
+           $priority,
+           $authorKey,
+           $status,
+           $hasComments,
+           $hasRelationships,
+           $hasTags,
+           $hasWorkHistory,
+           $createdAt,
+           $updatedAt,
+           $resolvedAt)";
+    }
+
+    private string GetInsertCommandWithAllColumns() {
+        return @"INSERT INTO Tickets (
             Identifier, 
             Title,
             Description,
@@ -46,42 +186,6 @@ public class TicketRepository {
            $createdAt,
            $updatedAt,
            $resolvedAt)";
-
-        insertCmd.Parameters.AddWithValue("$identifier", ticket.Identifier);
-        insertCmd.Parameters.AddWithValue("$title", ticket.Title);
-        insertCmd.Parameters.AddWithValue("$description", ticket.Description);
-        insertCmd.Parameters.AddWithValue("$priority", (int)ticket.Priority);
-        insertCmd.Parameters.AddWithValue("$authorKey", ticket.Author.Id);
-        insertCmd.Parameters.AddWithValue("$status", (int)ticket.Status);
-        insertCmd.Parameters.AddWithValue("$hasComments", ticket.Comments.Count() > 0 ? 1 : 0);
-        insertCmd.Parameters.AddWithValue("$hasRelationships", ticket.Relationships.Count() > 0 ? 1 : 0);
-        insertCmd.Parameters.AddWithValue("$hasTags", ticket.Tags.Count() > 0 ? 1 : 0);
-        insertCmd.Parameters.AddWithValue("$hasWorkHistory", ticket.WorkHistory.Count() > 0 ? 1 : 0);
-
-        if (ticket.Project != null) {
-            insertCmd.Parameters.AddWithValue("$projectKey", ticket.Project.Id);
-        } else {
-            insertCmd.Parameters.AddWithValue("$projectKey", null);
-        }
-
-
-        insertCmd.Parameters.AddWithValue("$createdAt", DateTimeConverter.ToUnix(ticket.CreatedAt));
-        insertCmd.Parameters.AddWithValue("$updatedAt", DateTimeConverter.ToUnix(ticket.UpdatedAt));
-
-        if (ticket.ResolvedAt.HasValue) {
-            insertCmd.Parameters.AddWithValue("$resolvedAt", DateTimeConverter.ToUnix(ticket.ResolvedAt.Value));
-        } else {
-            insertCmd.Parameters.AddWithValue("$resolvedAt", null);         
-        }
-
-        try {
-            insertCmd.ExecuteNonQuery();
-        } catch (Exception e) {
-            SqliteUtils.PrintInsertCommandParametersForError(e, insertCmd);
-            SqliteUtils.PrintTableSchema(_connection, "Tickets");
-            throw;      
-        }
-        
     }
 
     public int GetTicketCount() {
