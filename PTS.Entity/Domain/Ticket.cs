@@ -3,7 +3,7 @@ namespace PTS.Entity.Domain;
 
 public class Ticket {
 
-    public int Id {get; set;}
+    public long Id {get; set;}
 
     public string Identifier {get; set;}
 

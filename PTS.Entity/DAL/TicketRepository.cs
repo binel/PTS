@@ -7,6 +7,64 @@ using PTS.Entity.Util;
 public class TicketRepository {
     // TODO complete 
 
+    private class TicketDto {
+        public long Id {get; set;}
+        public string Identifier {get; set;}
+        public string Title {get; set;}
+        public string Description {get; set;}
+        public Priority Priority {get; set;}
+        public long AuthorKey {get; set;}
+        public Status Status {get; set;}
+        public long HasComments {get; set;}
+        public long HasRelationships {get; set;}
+        public long HasTags {get; set;}
+        public long HasWorkHistory {get; set;}
+        public long? ProjectKey {get; set;}
+        public DateTime CreatedAt {get; set;}
+        public DateTime UpdatedAt {get; set;}
+        public DateTime? ResolvedAt {get; set;}
+
+        public Ticket ToTicket() {
+            Ticket ticket =  new Ticket {
+                Id = Id,
+                Identifier = Identifier,
+                Title = Title,
+                Description = Description,
+                Priority = Priority,
+                Author = new User {
+                    Id = AuthorKey,
+                    // TODO resolve 
+                },
+                Status = Status,
+                CreatedAt = CreatedAt,
+                UpdatedAt = UpdatedAt,
+                ResolvedAt = ResolvedAt
+            };
+
+            if (HasComments == 1) {
+                // TODO resolve 
+            }
+
+            if (HasRelationships == 1) {
+                // TODO resolve 
+            }
+
+            if (HasTags == 1) {
+                // TODO resolve 
+            }
+
+            if (HasWorkHistory == 1) {
+                // TODO resolve
+            }
+
+            if (ProjectKey != null) {
+                // TODO resolve 
+            }
+
+            return ticket;
+        }
+    }
+
     private SqliteConnection _connection;
 
     public TicketRepository(SqliteConnection connection) {
@@ -201,8 +259,60 @@ public class TicketRepository {
         throw new InvalidOperationException("Could not get count of tickets");       
     }
 
-    public void UpdateTicketTitle(int id, string title) {
+    public Ticket GetTicketById(int id) {
+        var selectCmd = _connection.CreateCommand();
+        selectCmd.CommandText = 
+        @"SELECT Id, 
+            Identifier,
+            Title,
+            Description,
+            Priority,
+            AuthorKey,
+            Status,
+            HasComments,
+            HasRelationships,
+            HasTags,
+            HasWorkHistory,
+            ProjectKey,
+            CreatedAt,
+            UpdatedAt,
+            ResolvedAt
+          FROM Tickets
+          WHERE Id=$ticketId";
+
+        selectCmd.Parameters.AddWithValue("$ticketId", id);
+
+        using var reader = selectCmd.ExecuteReader();
+        
+        TicketDto ticket = ReadTicketFromReader(reader);
+
+        return ticket.ToTicket(); 
+    }
+
+    public List<Ticket> GetAllTicketsInProject(int projectId) {
         throw new NotImplementedException();
+    }
+
+    public List<Ticket> GetTicketsByStatus(Status status) {
+        throw new NotImplementedException();
+    }
+
+    public void UpdateTicketTitle(int id, string title) {
+        var insertCmd = _connection.CreateCommand();
+        insertCmd.CommandText = 
+        @"UPDATE Tickets 
+          SET Title = $title,
+          UpdatedAt = $updatedAt
+          WHERE Id=$ticketId
+          ";
+
+        DateTime updateTime = DateTime.UtcNow;
+
+        insertCmd.Parameters.AddWithValue("$ticketId", id);
+        insertCmd.Parameters.AddWithValue("$title", title);
+        insertCmd.Parameters.AddWithValue("$updatedAt", DateTimeConverter.ToUnix(DateTime.UtcNow));
+
+        insertCmd.ExecuteNonQuery();   
     }
 
     public void UpdateTicketDescription(int id, string description) {
@@ -258,5 +368,40 @@ public class TicketRepository {
 
     public void UpdateTicketStatus(int ticketId, Status status) {
         throw new NotImplementedException();
+    }
+
+    private TicketDto ReadTicketFromReader(SqliteDataReader reader) {
+        reader.Read();
+        return ReadTicketWithoutAdvance(reader);
+    }
+
+    private List<TicketDto> ReadTicketsFromReader(SqliteDataReader reader) {
+        List<TicketDto> users = new List<TicketDto>();
+        while (reader.Read()) {
+            users.Add(ReadTicketWithoutAdvance(reader));
+        }
+
+        return users;
+    }
+
+    private TicketDto ReadTicketWithoutAdvance(SqliteDataReader reader) {
+        var ticket = new TicketDto {
+            Id = (long)reader["Id"],
+            Identifier = (string)reader["Identifier"],
+            Title = (string)reader["Title"],
+            Description = (string)reader["Description"],
+            Priority = (Priority)(int)(long)reader["Priority"],
+            AuthorKey = (long)reader["AuthorKey"],
+            Status = (Status)(int)(long)reader["Status"],
+            HasComments = (long)reader["HasComments"],
+            HasRelationships = (long)reader["HasRelationships"],
+            HasTags = (long)reader["HasTags"],
+            HasWorkHistory = (long)reader["HasWorkHistory"],
+            ProjectKey = (long?)reader["ProjectKey"],
+            CreatedAt = DateTimeConverter.FromUnix((long)reader["CreatedAt"]),
+            UpdatedAt = DateTimeConverter.FromUnix((long)reader["UpdatedAt"]),
+            ResolvedAt = DateTimeConverter.FromUnix((long)reader["ResolvedAt"])
+        };
+        return ticket;
     }
 }
