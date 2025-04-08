@@ -31,6 +31,7 @@ public class DatabaseCreator {
         CreateCommentTable(version);
         CreateTagTable(version);
         CreateTagMappingTable(version);
+        CreateStatusHistoryTable(version);
         CreateUserTable(version);
     }
 
@@ -111,7 +112,20 @@ public class DatabaseCreator {
     }
 
     public void CreateStatusHistoryTable(int version) {
-        throw new NotImplementedException();
+      var tableCmd = _connection.CreateCommand();
+
+        tableCmd.CommandText = 
+        @"
+        CREATE TABLE IF NOT EXISTS StatusHistory (
+            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            TicketKey INTEGER NOT NULL,
+            MoverKey INTEGER NOT NULL,
+            FromStatus INTEGER NOT NULL,
+            ToStatus INTEGER NOT NULL,
+            CreatedAt INTEGER NOT NULL
+        )";
+
+        tableCmd.ExecuteNonQuery();
     }
 
     public void CreateUserTable(int version) {
