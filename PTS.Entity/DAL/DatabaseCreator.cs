@@ -28,11 +28,13 @@ public class DatabaseCreator {
         }
 
         CreateTicketTable(version);
-
+        CreateCommentTable(version);
+        CreateTagTable(version);
+        CreateTagMappingTable(version);
         CreateUserTable(version);
     }
 
-    public static void CreateMetadataTable(int version) {
+    public void CreateMetadataTable(int version) {
         throw new NotImplementedException();
     }
 
@@ -49,10 +51,6 @@ public class DatabaseCreator {
             Priority INTEGER NOT NULL,
             AuthorKey INTEGER NOT NULL,
             Status INTEGER NOT NULL,
-            HasComments INTEGER NOT NULL,
-            HasRelationships INTEGER NOT NULL,
-            HasTags INTEGER NOT NULL,
-            HasWorkHistory INTEGER NOT NULL,
             ProjectKey INTEGER,
             CreatedAt INTEGER NOT NULL,
             UpdatedAt INTEGER NOT NULL,
@@ -62,27 +60,57 @@ public class DatabaseCreator {
         tableCmd.ExecuteNonQuery();
     }
 
-    public static void CreateCommentTable(int version) {
+    public void CreateCommentTable(int version) {
+        var tableCmd = _connection.CreateCommand();
+
+        tableCmd.CommandText = 
+        @"
+        CREATE TABLE IF NOT EXISTS Comments (
+            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            AuthorKey INTEGER NOT NULL,
+            TicketKey INTEGER NOT NULL,
+            Content TEXT NOT NULL,
+            CreatedAt INTEGER NOT NULL,
+            UpdatedAt INTEGER NOT NULL
+        )";
+
+        tableCmd.ExecuteNonQuery();
+    }
+
+    public void CreateProjectTable(int version) {
         throw new NotImplementedException();
     }
 
-    public static void CreateProjectTable(int version) {
-        throw new NotImplementedException();
+    public void CreateTagTable(int version) {
+      var tableCmd = _connection.CreateCommand();
+
+        tableCmd.CommandText = 
+        @"
+        CREATE TABLE IF NOT EXISTS Tags (
+            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            Name TEXT NOT NULL,
+            CreatedAt INTEGER NOT NULL
+        )";
+
+        tableCmd.ExecuteNonQuery();
     }
 
-    public static void CreateProjectMappingTable(int version) {
-        throw new NotImplementedException();
+    public void CreateTagMappingTable(int version) {
+      var tableCmd = _connection.CreateCommand();
+
+        tableCmd.CommandText = 
+        @"
+        CREATE TABLE IF NOT EXISTS TagMapping (
+            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            TicketKey INTEGER NOT NULL,
+            TagKey INTEGER NOT NULL,
+            CreatedAt INTEGER NOT NULL
+        )";
+
+        tableCmd.ExecuteNonQuery();
     }
 
-    public static void CreateTagTable(int version) {
-        throw new NotImplementedException();
-    }
-
-    public static void CreateTagMappingTable(int version) {
-        throw new NotImplementedException();
-    }
-
-    public static void CreateStatusHistoryTable(int version) {
+    public void CreateStatusHistoryTable(int version) {
         throw new NotImplementedException();
     }
 
@@ -106,16 +134,7 @@ public class DatabaseCreator {
         tableCmd.ExecuteNonQuery();
     }
 
-    public static void CreateWorkHistoryTable(int version) {
+    public void CreateWorkHistoryTable(int version) {
         throw new NotImplementedException();
     }
-
-    public static void CreateRelationshipTable(int version) {
-        throw new NotImplementedException();
-    }
-
-    public static void CreateRelationshipMappingTable(int version) {
-        throw new NotImplementedException();
-    }
-
 }

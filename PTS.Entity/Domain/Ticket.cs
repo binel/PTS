@@ -1,7 +1,7 @@
 namespace PTS.Entity.Domain;
 
 
-public class Ticket {
+public class Ticket { // TODO redo this to match database 
 
     public long Id {get; set;}
 
@@ -13,17 +13,17 @@ public class Ticket {
 
     public Priority Priority {get; set;}
 
-    public User Author {get; set;}
+    public long AuthorId {get; set;}
 
     public Status Status {get; set;}
 
-    public List<Comment> Comments {get; set;} = new List<Comment>();
+    public bool HasComments {get; set;}
 
-    public List<Relationship> Relationships {get; set;} = new List<Relationship>();
+    public bool HasRelationships {get; set;}
 
-    public List<Tag> Tags {get; set;} = new List<Tag>();
+    public bool HasTags {get; set;}
 
-    public List<StatusHistory> StatusHistory {get; set;} = new List<StatusHistory>();
+    public bool HasWorkHistory {get; set;}
 
     public DateTime CreatedAt {get; set;}
 
@@ -31,7 +31,5 @@ public class Ticket {
 
     public DateTime? ResolvedAt {get; set;}
 
-    public Project? Project {get; set;}
-
-    public List<WorkHistory> WorkHistory {get; set;} = new List<WorkHistory>();
+    public long? ProjectId {get; set;}
 }
