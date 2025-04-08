@@ -20,7 +20,6 @@ public class TicketRepositoryTests {
             Description = "This is a test ticket",
             Priority = Priority.None,
             AuthorId = 1,
-            ProjectId = 1,
             Status = Status.Someday,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
@@ -35,62 +34,7 @@ public class TicketRepositoryTests {
     }
 
     [Test]
-    public void CreateTicketNoProjectKey() {
-        Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
-        creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
-
-        TicketRepository repo = new TicketRepository(db.GetConnection());
-
-        Ticket ticket = new Ticket {
-            Identifier = "TEST-1",
-            Title = "Test Ticket",
-            Description = "This is a test ticket",
-            Priority = Priority.None,
-            AuthorId = 1,
-            Status = Status.Someday,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow,
-            ResolvedAt = DateTime.UtcNow
-        };
-
-        repo.AddTicket(ticket);
-
-        var ticketCount = repo.GetTicketCount();
-
-        Assert.That(ticketCount, Is.EqualTo(1));  
-
-    }
-
-    [Test]
     public void CreateTicketNoResolvedAt() {
-        Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
-        creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
-
-        TicketRepository repo = new TicketRepository(db.GetConnection());
-
-        Ticket ticket = new Ticket {
-            Identifier = "TEST-1",
-            Title = "Test Ticket",
-            Description = "This is a test ticket",
-            Priority = Priority.None,
-            AuthorId = 1,
-            ProjectId = 1,
-            Status = Status.Someday,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-
-        repo.AddTicket(ticket);
-
-        var ticketCount = repo.GetTicketCount();
-
-        Assert.That(ticketCount, Is.EqualTo(1));  
-    }
-
-    [Test]
-    public void CreateTicketOnlyRequiredFields() {
         Database db = new Database();
         DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
@@ -211,65 +155,6 @@ public class TicketRepositoryTests {
         Assert.That(readTicket.Status, Is.EqualTo(Status.InProgress));          
     }
 
-    [Test]
-    public void GetAllTicketsInProject() {
-        Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
-        creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
-
-        TicketRepository repo = new TicketRepository(db.GetConnection());
-
-        Ticket ticket1 = GetTicketWithAllFields();
-        ticket1.ProjectId = 2;
-        repo.AddTicket(ticket1);
-
-        Ticket ticket2 = GetTicketWithAllFields();
-        ticket2.ProjectId = 2;
-        repo.AddTicket(ticket2);
-
-        var tickets = repo.GetAllTicketsInProject(2);
-
-        Assert.That(tickets.Count(), Is.EqualTo(2));         
-    }
-
-    [Test]
-    public void AssociateWithProject() {
-        Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
-        creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
-
-        TicketRepository repo = new TicketRepository(db.GetConnection());
-
-        Ticket ticket1 = GetTicketWithAllFields();
-        ticket1.ProjectId = 1;
-        repo.AddTicket(ticket1);
-
-        repo.AssociateWithProject(1, 2);
-
-        var tickets = repo.GetAllTicketsInProject(2);
-
-        Assert.That(tickets.Count(), Is.EqualTo(1));              
-    }
-
-    [Test]
-    public void RemoveProjectAssociation() {
-        Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
-        creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
-
-        TicketRepository repo = new TicketRepository(db.GetConnection());
-
-        Ticket ticket1 = GetTicketWithAllFields();
-        ticket1.ProjectId = 1;
-        repo.AddTicket(ticket1);
-
-        repo.RemoveProjectAssociation(1);
-
-        var tickets = repo.GetAllTicketsInProject(1);
-
-        Assert.That(tickets.Count(), Is.EqualTo(0));              
-    }    
-
     private Ticket GetTicketWithAllFields() {
         return new Ticket {
             Identifier = "TEST-1",
@@ -277,7 +162,6 @@ public class TicketRepositoryTests {
             Description = "This is a test ticket",
             Priority = Priority.None,
             AuthorId = 1,
-            ProjectId = 1,
             Status = Status.Someday,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,

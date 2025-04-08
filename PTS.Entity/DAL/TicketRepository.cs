@@ -14,17 +14,11 @@ public class TicketRepository {
     public void AddTicket(Ticket ticket) {
         var insertCmd = _connection.CreateCommand();
         
-        if (ticket.ProjectId == null && ticket.ResolvedAt == null) {
+        if (ticket.ResolvedAt == null) {
             insertCmd.CommandText = GetInsertCommand();
         }
-        else if (ticket.ProjectId != null && ticket.ResolvedAt == null) {
-            insertCmd.CommandText = GetInsertCommandWithProjectKey();
-        }
-        else if (ticket.ProjectId == null && ticket.ResolvedAt != null) {
-            insertCmd.CommandText = GetInsertCommandWithResolvedAt();
-        }
         else {
-            insertCmd.CommandText = GetInsertCommandWithAllColumns();
+            insertCmd.CommandText = GetInsertCommandWithResolvedAt();
         }
 
         insertCmd.Parameters.AddWithValue("$identifier", ticket.Identifier);
@@ -33,13 +27,6 @@ public class TicketRepository {
         insertCmd.Parameters.AddWithValue("$priority", (int)ticket.Priority);
         insertCmd.Parameters.AddWithValue("$authorKey", ticket.AuthorId);
         insertCmd.Parameters.AddWithValue("$status", (int)ticket.Status);
-
-        if (ticket.ProjectId != null) {
-            insertCmd.Parameters.AddWithValue("$projectKey", ticket.ProjectId);
-        } else {
-            insertCmd.Parameters.AddWithValue("$projectKey", null);
-        }
-
         insertCmd.Parameters.AddWithValue("$createdAt", DateTimeConverter.ToUnix(ticket.CreatedAt));
         insertCmd.Parameters.AddWithValue("$updatedAt", DateTimeConverter.ToUnix(ticket.UpdatedAt));
 
@@ -79,29 +66,6 @@ public class TicketRepository {
            $updatedAt)";
     }
 
-    private string GetInsertCommandWithProjectKey() {
-        return @"INSERT INTO Tickets (
-            Identifier, 
-            Title,
-            Description,
-            Priority,
-            AuthorKey,
-            Status,
-            ProjectKey,
-            CreatedAt,
-            UpdatedAt)
-          VALUES (
-           $identifier,
-           $title,
-           $description,
-           $priority,
-           $authorKey,
-           $status,
-           $projectKey,
-           $createdAt,
-           $updatedAt)";
-    }
-
     private string GetInsertCommandWithResolvedAt() {
         return @"INSERT INTO Tickets (
             Identifier, 
@@ -120,31 +84,6 @@ public class TicketRepository {
            $priority,
            $authorKey,
            $status,
-           $createdAt,
-           $updatedAt,
-           $resolvedAt)";
-    }
-
-    private string GetInsertCommandWithAllColumns() {
-        return @"INSERT INTO Tickets (
-            Identifier, 
-            Title,
-            Description,
-            Priority,
-            AuthorKey,
-            Status,
-            ProjectKey,
-            CreatedAt,
-            UpdatedAt,
-            ResolvedAt)
-          VALUES (
-           $identifier,
-           $title,
-           $description,
-           $priority,
-           $authorKey,
-           $status,
-           $projectKey,
            $createdAt,
            $updatedAt,
            $resolvedAt)";
@@ -173,7 +112,6 @@ public class TicketRepository {
             Priority,
             AuthorKey,
             Status,
-            ProjectKey,
             CreatedAt,
             UpdatedAt,
             ResolvedAt
@@ -187,32 +125,6 @@ public class TicketRepository {
         Ticket ticket = ReadTicketFromReader(reader);
 
         return ticket; 
-    }
-
-    public List<Ticket> GetAllTicketsInProject(int projectId) {
-        var selectCmd = _connection.CreateCommand();
-        selectCmd.CommandText = 
-        @"SELECT Id, 
-            Identifier,
-            Title,
-            Description,
-            Priority,
-            AuthorKey,
-            Status,
-            ProjectKey,
-            CreatedAt,
-            UpdatedAt,
-            ResolvedAt
-          FROM Tickets
-          WHERE ProjectKey=$projectId";
-
-        selectCmd.Parameters.AddWithValue("$projectId", projectId);
-
-        using var reader = selectCmd.ExecuteReader();
-        
-        List<Ticket> tickets = ReadTicketsFromReader(reader);
-
-        return tickets;
     }
 
     public void UpdateTicketTitle(int id, string title) {
@@ -269,41 +181,6 @@ public class TicketRepository {
         insertCmd.ExecuteNonQuery();  
     }
 
-    public void AssociateWithProject(long ticketId, long projectId) {
-        var insertCmd = _connection.CreateCommand();
-        insertCmd.CommandText = 
-        @"UPDATE Tickets 
-          SET ProjectKey = $projectKey,
-          UpdatedAt = $updatedAt
-          WHERE Id=$ticketId
-          ";
-
-        DateTime updateTime = DateTime.UtcNow;
-
-        insertCmd.Parameters.AddWithValue("$ticketId", ticketId);
-        insertCmd.Parameters.AddWithValue("$projectKey", projectId);
-        insertCmd.Parameters.AddWithValue("$updatedAt", DateTimeConverter.ToUnix(DateTime.UtcNow));
-
-        insertCmd.ExecuteNonQuery();
-    }
-
-    public void RemoveProjectAssociation(int ticketId) {
-        var insertCmd = _connection.CreateCommand();
-        insertCmd.CommandText = 
-        @"UPDATE Tickets 
-          SET ProjectKey = NULL,
-          UpdatedAt = $updatedAt
-          WHERE Id=$ticketId
-          ";
-
-        DateTime updateTime = DateTime.UtcNow;
-
-        insertCmd.Parameters.AddWithValue("$ticketId", ticketId);
-        insertCmd.Parameters.AddWithValue("$updatedAt", DateTimeConverter.ToUnix(DateTime.UtcNow));
-
-        insertCmd.ExecuteNonQuery();
-    }
-
     public void UpdateTicketStatus(int ticketId, Status status) {
         var insertCmd = _connection.CreateCommand();
         insertCmd.CommandText = 
@@ -345,7 +222,6 @@ public class TicketRepository {
             Priority = (Priority)(int)(long)reader["Priority"],
             AuthorId = (long)reader["AuthorKey"],
             Status = (Status)(int)(long)reader["Status"],
-            ProjectId = (long?)reader["ProjectKey"],
             CreatedAt = DateTimeConverter.FromUnix((long)reader["CreatedAt"]),
             UpdatedAt = DateTimeConverter.FromUnix((long)reader["UpdatedAt"]),
             ResolvedAt = DateTimeConverter.FromUnix((long)reader["ResolvedAt"])

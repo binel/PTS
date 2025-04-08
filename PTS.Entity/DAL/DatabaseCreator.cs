@@ -53,7 +53,6 @@ public class DatabaseCreator {
             Priority INTEGER NOT NULL,
             AuthorKey INTEGER NOT NULL,
             Status INTEGER NOT NULL,
-            ProjectKey INTEGER,
             CreatedAt INTEGER NOT NULL,
             UpdatedAt INTEGER NOT NULL,
             ResolvedAt INTEGER
@@ -77,10 +76,6 @@ public class DatabaseCreator {
         )";
 
         tableCmd.ExecuteNonQuery();
-    }
-
-    public void CreateProjectTable(int version) {
-        throw new NotImplementedException();
     }
 
     public void CreateTagTable(int version) {
