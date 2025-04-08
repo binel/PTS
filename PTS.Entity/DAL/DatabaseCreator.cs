@@ -34,6 +34,7 @@ public class DatabaseCreator {
         CreateStatusHistoryTable(version);
         CreateUserTable(version);
         CreateWorkHistoryTable(version);
+        CreateIdentifierTable(version);
     }
 
     public void CreateMetadataTable(int version) {
@@ -156,6 +157,23 @@ public class DatabaseCreator {
             EndedAt INTEGER NOT NULL,
             CreatedAt INTEGER NOT NULL
         )";
+
+        tableCmd.ExecuteNonQuery();
+    }
+
+    public void CreateIdentifierTable(int version) {
+        var tableCmd = _connection.CreateCommand(); 
+
+        tableCmd.CommandText = 
+        @"
+        CREATE TABLE IF NOT EXISTS Identifiers (
+            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            Text TEXT NOT NULL,
+            HighestValue INTEGER NOT NULL, 
+            CreatedAt INTEGER NOT NULL,
+            UpdatedAt INTEGER NOT NULL
+        )
+        ";
 
         tableCmd.ExecuteNonQuery();
     }
