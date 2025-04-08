@@ -55,7 +55,7 @@ public class IdentifierRepository {
         insertCmd.CommandText = 
         @"UPDATE Identifiers 
           SET UpdatedAt = $updatedAt,
-          HighestValue = $highestValue,
+          HighestValue = $highestValue
           WHERE Id=$identifierId
           ";
 

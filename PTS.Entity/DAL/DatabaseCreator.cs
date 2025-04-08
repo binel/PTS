@@ -27,6 +27,7 @@ public class DatabaseCreator {
             throw new ArgumentException($"Cannot create database with version greater than {CURRENT_DB_VERSION}");
         }
 
+        CreateMetadataTable(version);
         CreateTicketTable(version);
         CreateCommentTable(version);
         CreateTagTable(version);
@@ -38,7 +39,35 @@ public class DatabaseCreator {
     }
 
     public void CreateMetadataTable(int version) {
-        throw new NotImplementedException();
+        var tableCmd = _connection.CreateCommand();
+
+        tableCmd.CommandText = 
+        @"
+        CREATE TABLE IF NOT EXISTS Metadata (
+            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            Key TEXT NOT NULL,
+            Value TEXT NOT NULL
+        )
+        ";
+
+        tableCmd.ExecuteNonQuery();
+
+        var dataCommand = _connection.CreateCommand();
+        dataCommand.CommandText = 
+        @"
+        INSERT INTO Metadata(
+            Key,
+            Value
+        ) VALUES (
+            $key,
+            $value
+        )
+        ";
+
+        dataCommand.Parameters.AddWithValue("$key", "db_version");
+        dataCommand.Parameters.AddWithValue("$value", "1");
+
+        dataCommand.ExecuteNonQuery();
     }
 
     public void CreateTicketTable(int version) {
