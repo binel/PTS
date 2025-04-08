@@ -33,6 +33,7 @@ public class DatabaseCreator {
         CreateTagMappingTable(version);
         CreateStatusHistoryTable(version);
         CreateUserTable(version);
+        CreateWorkHistoryTable(version);
     }
 
     public void CreateMetadataTable(int version) {
@@ -149,6 +150,18 @@ public class DatabaseCreator {
     }
 
     public void CreateWorkHistoryTable(int version) {
-        throw new NotImplementedException();
+      var tableCmd = _connection.CreateCommand();
+
+        tableCmd.CommandText = 
+        @"
+        CREATE TABLE IF NOT EXISTS WorkHistory (
+            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            TicketKey INTEGER NOT NULL,
+            StartedAt INTEGER NOT NULL,
+            EndedAt INTEGER NOT NULL,
+            CreatedAt INTEGER NOT NULL
+        )";
+
+        tableCmd.ExecuteNonQuery();
     }
 }
