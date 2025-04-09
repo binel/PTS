@@ -7,8 +7,8 @@ using PTS.Entity.Util;
 public class TagMappingRepository {
     private SqliteConnection _connection;
 
-    public TagMappingRepository(SqliteConnection connection) {
-        _connection = connection;
+    public TagMappingRepository(Database database) {
+        _connection = database.GetConnection();
     }
 
     public void AddTagAssociation(long ticketId, long tagId) {

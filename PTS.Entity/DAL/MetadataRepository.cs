@@ -5,8 +5,8 @@ using Microsoft.Data.Sqlite;
 public class MetadataRepository {
     private SqliteConnection _connection;
 
-    public MetadataRepository(SqliteConnection connection) {
-        _connection = connection;
+    public MetadataRepository(Database database) {
+        _connection = database.GetConnection();
     }
 
     public int GetDbVersion() {

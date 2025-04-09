@@ -7,8 +7,8 @@ using PTS.Entity.Util;
 public class IdentifierRepository {
     private SqliteConnection _connection;
 
-    public IdentifierRepository(SqliteConnection connection) {
-        _connection = connection;
+    public IdentifierRepository(Database database) {
+        _connection = database.GetConnection();
     }
 
     public void AddIdentifier(Identifier identifier) {

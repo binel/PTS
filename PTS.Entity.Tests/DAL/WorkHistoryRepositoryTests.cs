@@ -8,10 +8,10 @@ public class WorkHistoryRepositoryTests {
     [Test]
     public void CreateWorkHistory() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        WorkHistoryRepository repo = new WorkHistoryRepository(db.GetConnection());
+        WorkHistoryRepository repo = new WorkHistoryRepository(db);
 
         var history = new WorkHistory {
             TicketId = 1,
@@ -30,10 +30,10 @@ public class WorkHistoryRepositoryTests {
     [Test]
     public void DeleteWorkHistory() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        WorkHistoryRepository repo = new WorkHistoryRepository(db.GetConnection());
+        WorkHistoryRepository repo = new WorkHistoryRepository(db);
 
         var history = new WorkHistory {
             TicketId = 1,
@@ -53,10 +53,10 @@ public class WorkHistoryRepositoryTests {
     [Test]
     public void GetWorkHistoryForTicket() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        WorkHistoryRepository repo = new WorkHistoryRepository(db.GetConnection());
+        WorkHistoryRepository repo = new WorkHistoryRepository(db);
 
         var history = new WorkHistory {
             TicketId = 1,

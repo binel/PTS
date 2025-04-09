@@ -7,8 +7,8 @@ using PTS.Entity.Util;
 public class TicketRepository {
     private SqliteConnection _connection;
 
-    public TicketRepository(SqliteConnection connection) {
-        _connection = connection;
+    public TicketRepository(Database database) {
+        _connection = database.GetConnection();
     }
 
     public void AddTicket(Ticket ticket) {

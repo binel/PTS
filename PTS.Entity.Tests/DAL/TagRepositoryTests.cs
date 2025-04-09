@@ -9,10 +9,10 @@ public class TagRepositoryTests {
     public void CreateTag()
     {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        TagRepository repo = new TagRepository(db.GetConnection());
+        TagRepository repo = new TagRepository(db);
 
         var tag = new Tag {
             Name = "Test Tag",
@@ -29,10 +29,10 @@ public class TagRepositoryTests {
     [Test]
     public void GetTagById() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        TagRepository repo = new TagRepository(db.GetConnection());
+        TagRepository repo = new TagRepository(db);
 
         var tag = new Tag {
             Name = "Test Tag",
@@ -49,10 +49,10 @@ public class TagRepositoryTests {
     [Test]
     public void GetTags() {
          Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        TagRepository repo = new TagRepository(db.GetConnection());
+        TagRepository repo = new TagRepository(db);
 
         var tag1 = new Tag {
             Name = "Test Tag 1",
@@ -76,10 +76,10 @@ public class TagRepositoryTests {
     [Test]
     public void DeleteTag() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        TagRepository repo = new TagRepository(db.GetConnection());
+        TagRepository repo = new TagRepository(db);
 
         var tag = new Tag {
             Name = "Test Tag",

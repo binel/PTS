@@ -8,10 +8,10 @@ public class IdentifierRepositoryTests {
     [Test]
     public void AddAndGetIdentifiers() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        IdentifierRepository repo = new IdentifierRepository(db.GetConnection());
+        IdentifierRepository repo = new IdentifierRepository(db);
 
         var identifier = new Identifier {
             Text = "TEST",
@@ -32,10 +32,10 @@ public class IdentifierRepositoryTests {
     [Test]
     public void UpdateHighestValue() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        IdentifierRepository repo = new IdentifierRepository(db.GetConnection());
+        IdentifierRepository repo = new IdentifierRepository(db);
 
         var identifier = new Identifier {
             Text = "TEST",

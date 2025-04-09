@@ -6,8 +6,8 @@ public class DatabaseCreator {
     
     private SqliteConnection _connection;
 
-    public DatabaseCreator(SqliteConnection connection) {
-        _connection = connection;
+    public DatabaseCreator(Database database) {
+        _connection = database.GetConnection();
     }
 
     /*

@@ -7,8 +7,8 @@ using PTS.Entity.Util;
 public class StatusHistoryRepository {
     private SqliteConnection _connection;
 
-    public StatusHistoryRepository(SqliteConnection connection) {
-        _connection = connection;
+    public StatusHistoryRepository(Database database) {
+        _connection = database.GetConnection();
     }
 
     public void AddStatusHistory(StatusHistory history) {

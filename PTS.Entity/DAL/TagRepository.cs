@@ -7,8 +7,8 @@ using PTS.Entity.Util;
 public class TagRepository {
     private SqliteConnection _connection;
 
-    public TagRepository(SqliteConnection connection) {
-        _connection = connection;
+    public TagRepository(Database database) {
+        _connection = database.GetConnection();
     }
 
     public void AddTag(Tag tag) {

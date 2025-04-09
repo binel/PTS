@@ -9,10 +9,10 @@ public class TicketRepositoryTests {
     [Test]
     public void CreateTicketAllColumns() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        TicketRepository repo = new TicketRepository(db.GetConnection());
+        TicketRepository repo = new TicketRepository(db);
 
         Ticket ticket = new Ticket {
             Identifier = "TEST-1",
@@ -36,10 +36,10 @@ public class TicketRepositoryTests {
     [Test]
     public void CreateTicketNoResolvedAt() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        TicketRepository repo = new TicketRepository(db.GetConnection());
+        TicketRepository repo = new TicketRepository(db);
 
         Ticket ticket = new Ticket {
             Identifier = "TEST-1",
@@ -62,10 +62,10 @@ public class TicketRepositoryTests {
     [Test]
     public void GetTicketById() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        TicketRepository repo = new TicketRepository(db.GetConnection());
+        TicketRepository repo = new TicketRepository(db);
 
         Ticket ticket = GetTicketWithAllFields();
         repo.AddTicket(ticket);  
@@ -86,10 +86,10 @@ public class TicketRepositoryTests {
     [Test]
     public void UpdateTitle() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        TicketRepository repo = new TicketRepository(db.GetConnection());
+        TicketRepository repo = new TicketRepository(db);
 
         Ticket ticket = GetTicketWithAllFields();
         repo.AddTicket(ticket);
@@ -104,10 +104,10 @@ public class TicketRepositoryTests {
     [Test]
     public void UpdateDescription() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        TicketRepository repo = new TicketRepository(db.GetConnection());
+        TicketRepository repo = new TicketRepository(db);
 
         Ticket ticket = GetTicketWithAllFields();
         repo.AddTicket(ticket);
@@ -122,10 +122,10 @@ public class TicketRepositoryTests {
     [Test]
     public void UpdatePriority() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        TicketRepository repo = new TicketRepository(db.GetConnection());
+        TicketRepository repo = new TicketRepository(db);
 
         Ticket ticket = GetTicketWithAllFields();
         repo.AddTicket(ticket);
@@ -140,10 +140,10 @@ public class TicketRepositoryTests {
     [Test]
     public void UpdateStatus() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        TicketRepository repo = new TicketRepository(db.GetConnection());
+        TicketRepository repo = new TicketRepository(db);
 
         Ticket ticket = GetTicketWithAllFields();
         repo.AddTicket(ticket);

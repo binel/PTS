@@ -7,8 +7,8 @@ using PTS.Entity.Util;
 public class CommentRepository {
     private SqliteConnection _connection;
 
-    public CommentRepository(SqliteConnection connection) {
-        _connection = connection;
+    public CommentRepository(Database database) {
+        _connection = database.GetConnection();
     }
 
     public void AddComment(Comment comment) {

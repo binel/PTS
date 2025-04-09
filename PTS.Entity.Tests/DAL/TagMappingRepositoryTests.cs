@@ -8,10 +8,10 @@ public class TagMappingRepositoryTests {
     [Test]
     public void AddMapping() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        TagMappingRepository repo = new TagMappingRepository(db.GetConnection());
+        TagMappingRepository repo = new TagMappingRepository(db);
 
         repo.AddTagAssociation(1, 1);
 
@@ -23,10 +23,10 @@ public class TagMappingRepositoryTests {
     [Test]
     public void RemoveMapping() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        TagMappingRepository repo = new TagMappingRepository(db.GetConnection());
+        TagMappingRepository repo = new TagMappingRepository(db);
 
         repo.AddTagAssociation(1, 1);
         repo.RemoveTagAssociation(1, 1);
@@ -38,10 +38,10 @@ public class TagMappingRepositoryTests {
     [Test]
     public void GetTagsOnTicket() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        TagMappingRepository repo = new TagMappingRepository(db.GetConnection());
+        TagMappingRepository repo = new TagMappingRepository(db);
 
         repo.AddTagAssociation(1, 1);
 

@@ -18,8 +18,8 @@ public class UserRepository {
     private const string PASSWORD_UPDATED_AT_COL = "PasswordUpdatedAt";
     private const string LAST_LOGIN_AT_COL = "LastLoginAt";
 
-    public UserRepository(SqliteConnection connection) {
-        _connection = connection;
+    public UserRepository(Database database) {
+        _connection = database.GetConnection();
     }
 
     public void AddUser(User user) {

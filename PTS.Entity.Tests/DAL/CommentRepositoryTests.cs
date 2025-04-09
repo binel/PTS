@@ -8,10 +8,10 @@ public class CommentRepositoryTests {
     [Test]
     public void CreateComment() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        CommentRepository repo = new CommentRepository(db.GetConnection());
+        CommentRepository repo = new CommentRepository(db);
 
         var comment = new Comment {
             AuthorId = 1,
@@ -31,10 +31,10 @@ public class CommentRepositoryTests {
     [Test]
     public void ReadCommentById() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        CommentRepository repo = new CommentRepository(db.GetConnection());
+        CommentRepository repo = new CommentRepository(db);
 
         var comment = new Comment {
             AuthorId = 1,
@@ -58,10 +58,10 @@ public class CommentRepositoryTests {
     [Test]
     public void GetCommentsForTicket() {
          Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        CommentRepository repo = new CommentRepository(db.GetConnection());
+        CommentRepository repo = new CommentRepository(db);
 
         var comment1 = new Comment {
             AuthorId = 1,
@@ -91,10 +91,10 @@ public class CommentRepositoryTests {
     [Test]
     public void UpdateComment() {
          Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        CommentRepository repo = new CommentRepository(db.GetConnection());
+        CommentRepository repo = new CommentRepository(db);
 
         var comment = new Comment {
             AuthorId = 1,
@@ -116,10 +116,10 @@ public class CommentRepositoryTests {
     [Test]
     public void DeleteComment() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        CommentRepository repo = new CommentRepository(db.GetConnection());
+        CommentRepository repo = new CommentRepository(db);
 
         var comment = new Comment {
             AuthorId = 1,

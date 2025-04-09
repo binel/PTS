@@ -9,10 +9,10 @@ class UserRepositoryTests {
     public void CreateUser()
     {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        UserRepository repo = new UserRepository(db.GetConnection());
+        UserRepository repo = new UserRepository(db);
 
         var user = GetBasicUserWithoutId();
 
@@ -26,10 +26,10 @@ class UserRepositoryTests {
     [Test]
     public void GetAllUsers() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        UserRepository repo = new UserRepository(db.GetConnection());
+        UserRepository repo = new UserRepository(db);
 
         var user1 = GetBasicUserWithoutId();
         var user2 = GetBasicUserWithoutId();
@@ -47,10 +47,10 @@ class UserRepositoryTests {
     [Test]
     public void ReadUserByUsername() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        UserRepository repo = new UserRepository(db.GetConnection());
+        UserRepository repo = new UserRepository(db);
 
         var user = GetBasicUserWithoutId();
 
@@ -65,10 +65,10 @@ class UserRepositoryTests {
     [Test]
     public void ReadUserById() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        UserRepository repo = new UserRepository(db.GetConnection());
+        UserRepository repo = new UserRepository(db);
 
         var user = GetBasicUserWithoutId();
 
@@ -83,10 +83,10 @@ class UserRepositoryTests {
     [Test]
     public void UpdatePassword() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        UserRepository repo = new UserRepository(db.GetConnection());
+        UserRepository repo = new UserRepository(db);
 
         var user = GetBasicUserWithoutId();
 
@@ -103,10 +103,10 @@ class UserRepositoryTests {
     [Test]
     public void SetLastLoginTime() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        UserRepository repo = new UserRepository(db.GetConnection());
+        UserRepository repo = new UserRepository(db);
 
         var user = GetBasicUserWithoutId();
 
@@ -122,10 +122,10 @@ class UserRepositoryTests {
     [Test]
     public void SetUsername() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        UserRepository repo = new UserRepository(db.GetConnection());
+        UserRepository repo = new UserRepository(db);
 
         var user = GetBasicUserWithoutId();
 
@@ -141,10 +141,10 @@ class UserRepositoryTests {
     [Test]
     public void SetDisplayName() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        UserRepository repo = new UserRepository(db.GetConnection());
+        UserRepository repo = new UserRepository(db);
 
         var user = GetBasicUserWithoutId();
 

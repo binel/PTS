@@ -7,8 +7,8 @@ using PTS.Entity.Util;
 public class WorkHistoryRepository {
     private SqliteConnection _connection;
 
-    public WorkHistoryRepository(SqliteConnection connection) {
-        _connection = connection;
+    public WorkHistoryRepository(Database database) {
+        _connection = database.GetConnection();
     }
 
     public void AddWorkHistory(WorkHistory history) {

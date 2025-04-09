@@ -9,10 +9,10 @@ public class MetadataRepositoryTests {
     [Test]
     public void GetDbVersion() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        MetadataRepository repo = new MetadataRepository(db.GetConnection());
+        MetadataRepository repo = new MetadataRepository(db);
 
         var version = repo.GetDbVersion();
 

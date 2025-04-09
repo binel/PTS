@@ -9,7 +9,7 @@ public class Tests
     public void BasicCreationTest()
     {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(1);
     }
 }

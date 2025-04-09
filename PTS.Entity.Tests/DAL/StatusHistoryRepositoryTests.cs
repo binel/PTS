@@ -8,10 +8,10 @@ public class StatusHistoryRepositoryTests {
     [Test]
     public void CreateHistory(){
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        StatusHistoryRepository repo = new StatusHistoryRepository(db.GetConnection());
+        StatusHistoryRepository repo = new StatusHistoryRepository(db);
 
         var history = new StatusHistory {
             TicketId = 1,
@@ -31,10 +31,10 @@ public class StatusHistoryRepositoryTests {
     [Test]
     public void GetHistoryForTicket() {
         Database db = new Database();
-        DatabaseCreator creator = new DatabaseCreator(db.GetConnection());
+        DatabaseCreator creator = new DatabaseCreator(db);
         creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
 
-        StatusHistoryRepository repo = new StatusHistoryRepository(db.GetConnection());
+        StatusHistoryRepository repo = new StatusHistoryRepository(db);
 
         var history = new StatusHistory {
             TicketId = 1,
