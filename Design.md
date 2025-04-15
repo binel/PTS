@@ -149,33 +149,11 @@ Columns:
 - ToStatus (INTEGER) (NOT NULL) - foreign key to the status table for the ending status
 - At (INTEGER) (NOT NULL) - unix timestamp for when the transition happened. 
 
-*relationships* 
-stores the possible relationship types 
-
-Columns: 
-- id (INTEGER) (PRIMARY KEY) 
-- NameFrom (TEXT) - the name of the relationship on the "from" ticket 
-- NameTo (TEXT) - the name of the relationship on the "to" ticket 
-
-Contents: 
-- 0 | Blocks | Is Blocked By
-
-*relationship_mapping*
-stores what mappings a ticket has with other tickets 
-
-Columns: 
-- id (INTEGER) (PRIMARY KEY) 
-- RelationshipKey (INTEGER) (NOT NULL) - foreign key to relationships table 
-- FromTicketKey (INTEGER) (NOT NULL) - foreign key to the tickets table 
-- ToTicketKey (INTEGER) (NOT NULL) - foreign key to the tickets table 
-- CreatedAt (INTEGER) (NOT NULL) - unix timestamp
-
 *projects*
 stores the different projects in the system. A project is like a super-ticket - it contains other tickets. All the tickets need to be done for a project to be complete. Projects can have a status in the same way a ticket can. 
 
 Columns: 
 - id (INTEGER) (PRIMARY KEY) 
-- Identifier (TEXT) (NOT NULL) 
 - Title (TEXT) (NOT NULL) 
 - Description (TEXT) 
 - Priority (INTEGER) (NOT NULL) 

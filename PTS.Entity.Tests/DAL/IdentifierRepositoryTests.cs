@@ -53,4 +53,26 @@ public class IdentifierRepositoryTests {
         Assert.That(identifiers[0].Text, Is.EqualTo("TEST"));
         Assert.That(identifiers[0].HighestValue, Is.EqualTo(2));
     }
+
+    [Test]
+    public void GetIdentifierById() {
+        Database db = new Database();
+        DatabaseCreator creator = new DatabaseCreator(db);
+        creator.CreateDatabase(DatabaseCreator.CURRENT_DB_VERSION);
+
+        IdentifierRepository repo = new IdentifierRepository(db);
+
+        var identifier = new Identifier {
+            Text = "TEST",
+            HighestValue = 1,
+            UpdatedAt = DateTime.UtcNow,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        repo.AddIdentifier(identifier);
+
+        var readIdentifier = repo.GetIdentifierById(1);
+
+        Assert.That(readIdentifier.Text, Is.EqualTo("TEST"));      
+    }
 }

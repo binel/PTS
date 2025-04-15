@@ -33,6 +33,26 @@ public class IdentifierRepository {
         insertCmd.ExecuteNonQuery();
     }
 
+    public Identifier GetIdentifierById(long identifierId) {
+        var selectCmd = _connection.CreateCommand();
+        selectCmd.CommandText = 
+        @"SELECT Id, 
+            Text,
+            HighestValue,
+            CreatedAt,
+            UpdatedAt
+          FROM Identifiers
+          WHERE Id=$identifierId";
+
+        selectCmd.Parameters.AddWithValue("$identifierId", identifierId);
+
+        using var reader = selectCmd.ExecuteReader();
+        
+        var identifier = ReadIdentifierFromReader(reader);
+
+        return identifier;         
+    }
+
     public List<Identifier> GetAllIdentifiers() {
         var selectCmd = _connection.CreateCommand();
         selectCmd.CommandText = 

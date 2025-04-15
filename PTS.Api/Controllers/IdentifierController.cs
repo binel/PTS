@@ -15,12 +15,7 @@ public class IdentifierController : ControllerBase {
         creator.CreateDatabase(1);
         _identifierRepo = identifierRepo;
     }
-
-    [HttpGet("test")]
-    public string Test() {
-        return "test";
-    }
-
+    
     [HttpGet("getAllIdentifiers")]
     public List<Identifier> GetAllIdentifiers() {
         return _identifierRepo.GetAllIdentifiers();
