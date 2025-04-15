@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PTS.Entity.Tests", "PTS.Ent
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PTS.Api.SystemTests", "PTS.Api.SystemTests\PTS.Api.SystemTests.csproj", "{64740A5E-A477-4A35-8228-E1EACAC8570F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PTS.Core", "PTS.Core\PTS.Core.csproj", "{175CB161-3C3B-413D-A5AB-68BE93BF1B9E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{64740A5E-A477-4A35-8228-E1EACAC8570F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64740A5E-A477-4A35-8228-E1EACAC8570F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64740A5E-A477-4A35-8228-E1EACAC8570F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{175CB161-3C3B-413D-A5AB-68BE93BF1B9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{175CB161-3C3B-413D-A5AB-68BE93BF1B9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{175CB161-3C3B-413D-A5AB-68BE93BF1B9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{175CB161-3C3B-413D-A5AB-68BE93BF1B9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -12,8 +12,6 @@ if (args.Length == 1) {
     builder.Services.AddSingleton<Database>();
 }
 
-
-builder.Services.AddSingleton<DatabaseCreator>();
 builder.Services.AddScoped<IdentifierRepository>();
 
 builder.Services.AddOpenApi();

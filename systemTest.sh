@@ -1,10 +1,17 @@
+cwd=$(pwd)
+
 # delete the existing system test database if it exists 
-if [ -f PTS.Api/systemTest.db ]; then
-    echo "Deleting systemTest.db from previous run"
-    rm PTS.Api/systemTest.db
+if [ -f $cwd/systemTest.db ]; then
+    echo "Deleting $cwd/systemTest.db from previous run"
+    rm $cwd/systemTest.db
 fi
+
+# run the insaller to create a database 
+dotnet run --project PTS.Installer/PTS.Installer.csproj -- "Data Source=$cwd/systemTest.db" &
+sleep 3 
+
 # start up PTS.Api
-dotnet run --project PTS.Api/PTS.Api.csproj -- "Data Source=systemTest.db" &
+dotnet run --project PTS.Api/PTS.Api.csproj -- "Data Source=$cwd/systemTest.db" &
 PID=$!
 echo "started with PID $PID"
 

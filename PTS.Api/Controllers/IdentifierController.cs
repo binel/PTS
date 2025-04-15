@@ -11,8 +11,7 @@ public class IdentifierController : ControllerBase {
 
     private readonly IdentifierRepository _identifierRepo;
 
-    public IdentifierController(IdentifierRepository identifierRepo, DatabaseCreator creator) {
-        creator.CreateDatabase(1);
+    public IdentifierController(IdentifierRepository identifierRepo) {
         _identifierRepo = identifierRepo;
     }
     

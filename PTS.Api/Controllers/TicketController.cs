@@ -13,11 +13,9 @@ public class TicketController : ControllerBase {
     private readonly UserRepository _userRepository;
     private readonly IdentifierRepository _identifierRepository;
 
-    public TicketController(DatabaseCreator databaseCreator,
-        TicketRepository ticketRepository,
+    public TicketController(TicketRepository ticketRepository,
         UserRepository userRepository,
         IdentifierRepository identifierRepository) {
-        databaseCreator.CreateDatabase(1);
         _ticketRepository = ticketRepository;
         _userRepository = userRepository;
         _identifierRepository = identifierRepository;
