@@ -7,6 +7,12 @@ public class Database {
 
     private SqliteConnection _connection;
 
+    public Database() {}
+    
+    public Database(string connectionOverride) {
+        _connectionString = connectionOverride;
+    }
+
     public SqliteConnection GetConnection() {
         if (_connection == null) {
             _connection = new SqliteConnection(_connectionString);

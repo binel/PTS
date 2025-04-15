@@ -2,17 +2,22 @@ using PTS.Entity.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// allow the database connection string to be passed in 
+if (args.Length == 1) {
+    Console.WriteLine($"Using database connection override {args[0]}");
+    builder.Services.AddSingleton<Database>((sp) => {
+        return new Database(args[0]);
+    });
+} else {
+    builder.Services.AddSingleton<Database>();
+}
 
-builder.Services.AddSingleton<Database>();
+
 builder.Services.AddSingleton<DatabaseCreator>();
 builder.Services.AddScoped<IdentifierRepository>();
 
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
-
-
 
 var app = builder.Build();
 
