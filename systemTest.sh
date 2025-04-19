@@ -1,13 +1,22 @@
+#!/bin/bash
+set -e
+
 cwd=$(pwd)
 
 # delete the existing system test database if it exists 
-if [ -f $cwd/systemTest.db ]; then
+if [ -f "$cwd/systemTest.db" ]; then
     echo "Deleting $cwd/systemTest.db from previous run"
-    rm $cwd/systemTest.db
+    rm "$cwd/systemTest.db"
+fi
+
+# delete old log files 
+if [ -f "$cwd/PTS.Api/Logs/ptsapi.log" ]; then
+    echo "Deleting $cwd/PTS.Api/Logs/ptsapi.log from previous run"
+    rm "$cwd/PTS.Api/Logs/ptsapi.log"
 fi
 
 # run the insaller to create a database 
-dotnet run --project PTS.Installer/PTS.Installer.csproj -- "Data Source=$cwd/systemTest.db" &
+(dotnet run --project PTS.Installer/PTS.Installer.csproj -- "Data Source=$cwd/systemTest.db" )> ptsapi.log 2>&1 &
 sleep 3 
 
 # start up PTS.Api

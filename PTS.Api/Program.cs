@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Logging;
+using PTS.Api.Middleware;
 using PTS.Entity.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +20,10 @@ builder.Services.AddScoped<IdentifierRepository>();
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddProvider(new FileLoggerProvider("Logs/ptsapi.log"));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,7 +33,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

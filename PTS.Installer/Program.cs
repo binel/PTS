@@ -29,7 +29,7 @@ internal class Program
     static void CreateTestUser(Database db) {
         UserRepository userRepository = new UserRepository(db);
 
-        var hash = PasswordHash.Encrypt("unittests", 1);
+        var hash = PasswordHash.Encrypt("autotest", 1);
 
         User user = new User {
             Username = "Test",

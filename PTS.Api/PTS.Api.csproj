@@ -8,10 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PTS.Entity\PTS.Entity.csproj" />
+    <ProjectReference Include="..\PTS.Core\PTS.Core.csproj" />
   </ItemGroup>
 
 </Project>

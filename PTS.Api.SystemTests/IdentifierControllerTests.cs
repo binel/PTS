@@ -1,5 +1,6 @@
 ﻿namespace PTS.Api.SystemTests;
 
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
@@ -25,26 +26,27 @@ public class IdentifierControllerTests
         // Arrange
         var newIdentifier = new
         {
-            Text = "TestIdentifier",
-            HighestValue = 100,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            Text = "TestIdentifier"
         };
 
         var json = JsonSerializer.Serialize(newIdentifier);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        // Act - POST the identifier
+        var username = "Test";
+        var password = "autotess";
+        var authToken = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authToken);
+
+        // create a new identifier 
         var postResponse = await _client.PostAsync("http://localhost:5021/identifier/createIdentifier", content);
         postResponse.EnsureSuccessStatusCode();
 
-        // Act - GET all identifiers
+        // verify the identifier was added 
         var getResponse = await _client.GetAsync("http://localhost:5021/identifier/getAllIdentifiers");
         getResponse.EnsureSuccessStatusCode();
 
         var responseBody = await getResponse.Content.ReadAsStringAsync();
 
-        // Assert - basic check to see if the identifier appears in the response
         Console.WriteLine(responseBody);
         Assert.That(responseBody.Contains("TestIdentifier"), "Identifier was not found in the response.");
     }
