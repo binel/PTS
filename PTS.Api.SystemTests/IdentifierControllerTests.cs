@@ -33,7 +33,7 @@ public class IdentifierControllerTests
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
         var username = "Test";
-        var password = "autotess";
+        var password = "autotest";
         var authToken = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authToken);
 

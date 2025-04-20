@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using PTS.Api.Models;
 using PTS.Entity.DAL;
@@ -10,15 +11,16 @@ namespace PTS.Api.Controllers;
 public class TicketController : ControllerBase {
 
     private readonly TicketRepository _ticketRepository;
-    private readonly UserRepository _userRepository;
     private readonly IdentifierRepository _identifierRepository;
 
-    public TicketController(TicketRepository ticketRepository,
-        UserRepository userRepository,
+    private readonly ILogger<TicketController> _logger;
+
+    public TicketController(ILogger<TicketController> logger,
+        TicketRepository ticketRepository,
         IdentifierRepository identifierRepository) {
         _ticketRepository = ticketRepository;
-        _userRepository = userRepository;
         _identifierRepository = identifierRepository;
+        _logger = logger;
     }
 
     [HttpGet("ticketById")]
@@ -34,8 +36,6 @@ public class TicketController : ControllerBase {
     [HttpPost("createTicket")]
     public IActionResult CreateTicket(AddTicketModel addTicketModel) {
 
-        // verify author, get from header? 
-
         // verify identifier 
         if (addTicketModel.IdentifierId == 0) {
             return BadRequest("IdentifierId must be provided");
@@ -47,12 +47,18 @@ public class TicketController : ControllerBase {
             return BadRequest($"Identifier with id {addTicketModel.IdentifierId} does not exist");
         }
 
+        var authorId = HttpContext.User.FindFirst("UserId")?.Value;
+        if (authorId == null) {
+            _logger.LogWarning("Could not determine authorId!");
+            return BadRequest("Could not determine author Id");
+        }
+
         string ticketIdentifier = $"{identifier.Text}-{identifier.HighestValue + 1}";
 
         _identifierRepository.UpdateHighestValue(identifier.Id, identifier.HighestValue + 1);
 
         Ticket newTicket = new Ticket {
-            AuthorId = 1, // TODO complete
+            AuthorId = long.Parse(authorId),
             Identifier = ticketIdentifier,
             Title = addTicketModel.Title,
             Description = addTicketModel.Description,
@@ -62,8 +68,13 @@ public class TicketController : ControllerBase {
             UpdatedAt = DateTime.UtcNow
         };
 
-        _ticketRepository.AddTicket(newTicket);
+        var username = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value;
+        if (username == null) {
+            _logger.LogWarning("Could not determine username!");
+        }
 
+        _ticketRepository.AddTicket(newTicket);
+        _logger.LogInformation($"Ticket {newTicket.Identifier} created by user {username}");
         return Ok();
     }
 

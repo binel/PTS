@@ -16,6 +16,7 @@ if (args.Length == 1) {
 }
 
 builder.Services.AddScoped<IdentifierRepository>();
+builder.Services.AddScoped<UserRepository>();
 
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
@@ -32,9 +33,14 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
-app.UseAuthentication();
+app.Use(async (context, next) =>
+{
+    var userRepo = context.RequestServices.GetRequiredService<UserRepository>();
+    var basicAuth = new BasicAuth(next, userRepo);
+    await basicAuth.Invoke(context);
+});
 app.UseAuthorization();
+app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();
