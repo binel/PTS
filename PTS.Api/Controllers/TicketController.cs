@@ -25,12 +25,28 @@ public class TicketController : ControllerBase {
 
     [HttpGet("ticketById")]
     public string GetTicketByIdentifier() {
-        return "todo";
+        throw new NotImplementedException();
     }
 
     [HttpGet("ticketsInStatus")]
-    public string GetTicketsInStatus() {
-        return "todo";
+    public ActionResult<List<Ticket>> GetTicketsInStatus() {
+        // Mocked out to test the UI 
+
+        var tickets = new List<Ticket> {
+            new Ticket {
+                Id = 1,
+                Identifier = "HARD-001",
+                Title = "Hardcoded Ticket",
+                Description = "This is a hardcoded ticket",
+                Priority = Priority.High,
+                AuthorId = 1,
+                Status = Status.InProgress,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            }
+        };
+
+        return Ok(tickets);
     }
 
     [HttpPost("createTicket")]
@@ -80,46 +96,46 @@ public class TicketController : ControllerBase {
 
     [HttpPost("updateTitle")]
     public void UpdateTicketTitle() {
-
+        throw new NotImplementedException();
     }
 
     [HttpPost("updateDescription")]
     public void UpdateTicketDescription() {
-
+        throw new NotImplementedException();
     }
 
     [HttpPost("addComment")]
     public void AddCommentToTicket() {
-
+        throw new NotImplementedException();
     }
 
     [HttpPost("updateComment")]
     public void UpdateTicketComment() {
-
+        throw new NotImplementedException();
     }
 
     [HttpPost("deleteComment")]
     public void DeleteTicketComment() {
-
+        throw new NotImplementedException();
     }
 
     [HttpPost("changeTicketStatus")]
     public void ChangeTicketStatus() {
-
+        throw new NotImplementedException();
     }
 
     [HttpPost("addTag")]
     public void AddTagToTicket() {
-
+        throw new NotImplementedException();
     }
 
     [HttpPost("removeTag")]
     public void RemoveTagFromTicket() {
-
+        throw new NotImplementedException();
     }
 
     [HttpPost("addWorkHistory")]
     public void AddWorkHistory() {
-
+        throw new NotImplementedException();
     }
 }
