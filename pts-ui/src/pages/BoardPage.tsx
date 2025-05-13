@@ -1,15 +1,6 @@
 import { useEffect, useState } from 'react';
 type Status = 'Someday' | 'To Do' | 'In Progress' | 'Done';
 
-
-type Ticket = {
-  id: number;
-  identifier: string;
-  title: string;
-  description: string;
-  status: Status;
-};
-
 const statuses: Status[] = ['Someday', 'To Do', 'In Progress', 'Done'];
 
 function BoardPage() {
