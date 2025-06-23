@@ -51,6 +51,8 @@ app.Use(async (context, next) =>
     await basicAuth.Invoke(context);
 });
 */
+app.UsePathBase("/ptsapi");
+
 app.UseAuthorization();
 app.UseHttpsRedirection();
 app.MapControllers();

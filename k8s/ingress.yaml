@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pts-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+    - host: homelab.io
+      http:
+        paths:
+          - path: /pts
+            pathType: Prefix
+            backend:
+              service:
+                name: pts-ui
+                port:
+                  number: 80
+          - path: /ptsapi
+            pathType: Prefix
+            backend:
+              service:
+                name: pts-api
+                port:
+                  number: 80

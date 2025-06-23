@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pts-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pts-api
+  template:
+    metadata:
+      labels:
+        app: pts-api
+    spec:
+      containers:
+        - name: pts-api
+          image: localhost/pts-api:latest 
+          imagePullPolicy: IfNotPresent
+          args: ["Data Source=/app/data/pts.db"]
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+          volumeMounts:
+            - name: pts-sqlite-data
+              mountPath: /app/data
+      volumes:
+        - name: pts-sqlite-data
+          persistentVolumeClaim:
+            claimName: pts-sqlite-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pts-api
+spec:
+  type: NodePort
+  selector:
+    app: pts-api
+  ports:
+    - port: 80
+      targetPort: 80
+      
