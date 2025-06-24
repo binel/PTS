@@ -7,7 +7,7 @@ import IdentifierPage from './pages/IdentifierPage';
 
 function App() {
   return (
-    <Router basename="/pts">
+    <Router>
       <div className="app-container">
         <nav className="navbar">
           <Link to="/board">Board</Link>

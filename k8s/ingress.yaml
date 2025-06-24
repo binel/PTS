@@ -6,17 +6,17 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
   rules:
-    - host: homelab.io
+    - host: pts.homelab.io
       http:
         paths:
-          - path: /pts
+          - path: /
             pathType: Prefix
             backend:
               service:
                 name: pts-ui
                 port:
                   number: 80
-          - path: /ptsapi
+          - path: /api
             pathType: Prefix
             backend:
               service:
