@@ -3,11 +3,13 @@ type Status = 'Someday' | 'To Do' | 'In Progress' | 'Done';
 
 const statuses: Status[] = ['Someday', 'To Do', 'In Progress', 'Done'];
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 function BoardPage() {
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:5021/ticket/ticketsInStatus', {headers: {
+    fetch(`${apiUrl}/ticket/ticketsInStatus`, {headers: {
       Authorization: 'Basic ' + btoa('test:autotest')
     }})
       .then(res => res.json())
