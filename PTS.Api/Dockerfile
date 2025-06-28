@@ -6,10 +6,8 @@ ENV ASPNETCORE_URLS=http://+:80
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build 
 WORKDIR /src
-COPY PTS.Api/ PTS.Api/
-COPY PTS.Entity/ PTS.Entity/ 
-COPY PTS.Core/ PTS.Core/
-WORKDIR /src/PTS.Api
+COPY . .
+WORKDIR /src
 RUN dotnet restore "PTS.Api.csproj"
 RUN dotnet build "PTS.Api.csproj" -c Release -o /app/build/
 
