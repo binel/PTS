@@ -1,1 +1,0 @@
-dotnet test PTS.Entity.Tests/PTS.Entity.Tests.csproj
