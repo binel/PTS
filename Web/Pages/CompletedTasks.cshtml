@@ -1,0 +1,42 @@
+@page
+@model CompletedTasksModel
+@{
+    ViewData["Title"] = "Done";
+}
+
+<h1>Done</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Actions</th>
+            <th>Id</th>
+            <th>Description</th>
+            <th>Completed</th>
+            <th>Created</th>
+            <th>Due</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var task in Model.Tasks)
+    {
+        <tr>
+            <td>
+                <!-- Mark Complete -->
+                <form method="post"
+                      asp-page-handler="Uncomplete"
+                      asp-route-id="@task.Identifier"
+                      class="d-inline">
+                    <button type="submit" class="btn btn-danger btn-sm" title="Mark uncomplete">Uncomplete</button>
+                </form>
+            </td>
+
+            <td>@task.Identifier</td>
+            <td>@task.Description</td>
+            <td>@task.CreatedAt.ToString("g")</td>
+            <td>@(task.CompletedAt.HasValue ? task.CompletedAt.Value.ToString("g") : "-")</td>
+            <td>@(task.DueAt.HasValue ? task.DueAt.Value.ToString("d") : "-")</td>
+        </tr>
+    }
+    </tbody>
+</table>
