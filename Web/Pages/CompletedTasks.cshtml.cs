@@ -11,6 +11,8 @@ public class CompletedTasksModel : PageModel
 
     public IEnumerable<Core.Entity.Task> Tasks { get; private set; } = Enumerable.Empty<Core.Entity.Task>();
 
+    public int TotalComplete { get; private set; } = 0;
+
     public CompletedTasksModel(ILogger<CompletedTasksModel> logger, ITaskService taskService)
     {
         _logger = logger;
@@ -19,7 +21,8 @@ public class CompletedTasksModel : PageModel
 
     public void OnGet()
     {
-        Tasks = _taskService.GetCompletedTasks();
+        Tasks = _taskService.GetCompletedTasks().OrderBy(t => t.CompletedAt);
+        TotalComplete = Tasks.Count();
     }
 
     public IActionResult OnPostUncomplete(int id)

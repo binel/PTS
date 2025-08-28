@@ -11,6 +11,8 @@ public class IndexModel : PageModel
 
     public IEnumerable<Core.Entity.Task> Tasks { get; private set; } = Enumerable.Empty<Core.Entity.Task>();
 
+    public int TotalTodo { get; private set; } = 0;
+
     public IndexModel(ILogger<IndexModel> logger, ITaskService taskService)
     {
         _logger = logger;
@@ -20,6 +22,7 @@ public class IndexModel : PageModel
     public void OnGet()
     {
         Tasks = _taskService.GetTodoTasks().OrderBy(t => t.DueAt.HasValue ? t.DueAt : DateTimeOffset.MaxValue);
+        TotalTodo = Tasks.Count();
     }
 
     public IActionResult OnPostComplete(int id)
