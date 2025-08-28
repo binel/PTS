@@ -19,7 +19,7 @@ public class IndexModel : PageModel
 
     public void OnGet()
     {
-        Tasks = _taskService.GetTodoTasks();
+        Tasks = _taskService.GetTodoTasks().OrderBy(t => t.DueAt.HasValue ? t.DueAt : DateTimeOffset.MaxValue);
     }
 
     public IActionResult OnPostComplete(int id)
