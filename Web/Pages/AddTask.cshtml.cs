@@ -32,6 +32,8 @@ public class AddTaskModel : PageModel
             return Page();
         }
 
+        _logger.LogInformation("Creating new task {description}", Description);
+
         var newTask = new Core.Entity.Task
         {
             Description = Description,

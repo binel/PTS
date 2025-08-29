@@ -21,18 +21,21 @@ public class IndexModel : PageModel
 
     public void OnGet()
     {
+        _logger.LogInformation("Getting Todo Tasks for list page");
         Tasks = _taskService.GetTodoTasks().OrderBy(t => t.DueAt.HasValue ? t.DueAt : DateTimeOffset.MaxValue);
         TotalTodo = Tasks.Count();
     }
 
     public IActionResult OnPostComplete(int id)
     {
+        _logger.LogInformation("Completing task {id}", id);
         _taskService.CompleteTask(id);
         return RedirectToPage(); // reload list
     }
 
     public IActionResult OnPostDelete(int id)
     {
+        _logger.LogInformation("Deleting task {id}", id);
         _taskService.DeleteTask(id);
         return RedirectToPage(); // reload list
     }
