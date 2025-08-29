@@ -21,7 +21,7 @@ public class CompletedTasksModel : PageModel
 
     public void OnGet()
     {
-        Tasks = _taskService.GetCompletedTasks().OrderBy(t => t.CompletedAt);
+        Tasks = _taskService.GetCompletedTasks().OrderByDescending(t => t.CompletedAt.HasValue ? t.CompletedAt : DateTimeOffset.MinValue);
         TotalComplete = Tasks.Count();
     }
 
