@@ -9,11 +9,8 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Actions</th>
-            <th>Id</th>
-            <th>Description</th>
-            <th>Created</th>
-            <th>Due</th>
+            <th style="width: 100px;">Actions</th>
+            <th class="width: auto;">Details</th>
         </tr>
     </thead>
     <tbody>
@@ -21,28 +18,32 @@
     {
         <tr>
             <td>
-                <!-- Mark Complete -->
-                <form method="post"
-                      asp-page-handler="Complete"
-                      asp-route-id="@task.Identifier"
-                      class="d-inline">
-                    <button type="submit" class="btn btn-success btn-sm" title="Mark complete">complete</button>
-                </form>
-
-                <!-- Delete -->
-                <form method="post"
-                      asp-page-handler="Delete"
-                      asp-route-id="@task.Identifier"
-                      class="d-inline"
-                      onsubmit="return confirm('Delete task @task.Identifier?');">
-                    <button type="submit" class="btn btn-danger btn-sm" title="Delete">delete</button>
-                </form>
+                <div>
+                    <!-- Mark Complete -->
+                    <form method="post"
+                        asp-page-handler="Complete"
+                        asp-route-id="@task.Identifier"
+                        class="d-inline">
+                        <button type="submit" style="width: 100px;" class="btn btn-success btn-sm" title="Mark complete">complete</button>
+                    </form>
+                </div>
+                <div style="padding-top: 2px;">
+                    <!-- Delete -->
+                    <form method="post"
+                        asp-page-handler="Delete"
+                        asp-route-id="@task.Identifier"
+                        class="d-inline"
+                        onsubmit="return confirm('Delete task @task.Identifier?');">
+                        <button type="submit" style="width: 100px;" class="btn btn-danger btn-sm" title="Delete">delete</button>
+                    </form>
+                </div>
             </td>
-
-            <td>@task.Identifier</td>
-            <td>@task.Description</td>
-            <td>@task.CreatedAt.ToString("g")</td>
-            <td>@(task.DueAt.HasValue ? task.DueAt.Value.ToString("d") : "-")</td>
+            <td>
+                <div>@task.Description</div>
+                <div class="text-muted small">
+                    Created: @task.CreatedAt.ToString("d") | Due: @(task.DueAt.HasValue ? task.DueAt.Value.ToString("d") : "-")
+                </div>
+            </td>
         </tr>
     }
     </tbody>
