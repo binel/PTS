@@ -24,6 +24,16 @@ public interface ITaskService
     IEnumerable<Task> GetCompletedTasks();
 
     /// <summary>
+    /// Returns all the tasks that are due in the given range
+    /// </summary>
+    IEnumerable<Task> GetTasksDueInRange(DateTimeOffset start, DateTimeOffset end);
+
+    /// <summary>
+    /// Returns all the tasks that have been completed in the given range
+    /// </summary>
+    IEnumerable<Task> GetTasksCompletedInRange(DateTimeOffset start, DateTimeOffset end);
+
+    /// <summary>
     /// Creates and saves the provided task. Note that the identifier 
     /// will be automatically set
     /// </summary>
@@ -86,6 +96,44 @@ internal class TaskService: ITaskService
     public IEnumerable<Task> GetCompletedTasks()
     {
         return _taskStore.GetAllTasks().Where(t => t.Status == TaskStatus.Complete);
+    }
+
+    public IEnumerable<Task> GetTasksDueInRange(DateTimeOffset start, DateTimeOffset end)
+    {
+        var tasks = _taskStore.GetAllTasks().Where(t => t.Status == TaskStatus.Todo);
+        List<Task> tasksInRange = new List<Task>();
+        foreach (var t in tasks)
+        {
+            if (!t.DueAt.HasValue)
+            {
+                continue;
+            }
+            if (t.DueAt >= start && t.DueAt <= end)
+            {
+                tasksInRange.Add(t);
+            }
+        }
+
+        return tasksInRange;
+    }
+
+    public IEnumerable<Task> GetTasksCompletedInRange(DateTimeOffset start, DateTimeOffset end)
+    {
+        var tasks = _taskStore.GetAllTasks().Where(t => t.Status == TaskStatus.Complete);
+        List<Task> tasksInRange = new List<Task>();
+        foreach (var t in tasks)
+        {
+            if (!t.CompletedAt.HasValue)
+            {
+                continue;
+            }
+            if (t.CompletedAt >= start && t.CompletedAt <= end)
+            {
+                tasksInRange.Add(t);
+            }
+        }
+
+        return tasksInRange;
     }
 
     public Task AddTask(Task t)

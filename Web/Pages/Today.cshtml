@@ -1,0 +1,83 @@
+@page
+@model TodayModel
+@{
+    ViewData["Title"] = "Today";
+}
+
+<h1>Today</h1>
+<h5>Total Todo: @Model.TotalTodo</h5>
+<table class="table">
+    <thead>
+        <tr>
+            <th style="width: 100px;">Actions</th>
+            <th class="width: auto;">Details</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var task in Model.TodoTasks)
+    {
+        <tr>
+            <td>
+                <div>
+                    <!-- Mark Complete -->
+                    <form method="post"
+                        asp-page-handler="Complete"
+                        asp-route-id="@task.Identifier"
+                        class="d-inline">
+                        <button type="submit" style="width: 100px;" class="btn btn-success btn-sm" title="Mark complete">complete</button>
+                    </form>
+                </div>
+                <div style="padding-top: 2px;">
+                    <!-- Delete -->
+                    <form method="post"
+                        asp-page-handler="Delete"
+                        asp-route-id="@task.Identifier"
+                        class="d-inline"
+                        onsubmit="return confirm('Delete task @task.Identifier?');">
+                        <button type="submit" style="width: 100px;" class="btn btn-danger btn-sm" title="Delete">delete</button>
+                    </form>
+                </div>
+            </td>
+            <td>
+                <div>@task.Description</div>
+                <div class="text-muted small">
+                    Created: @task.CreatedAt.ToString("d") | Due: @(task.DueAt.HasValue ? task.DueAt.Value.ToString("d") : "-")
+                </div>
+            </td>
+        </tr>
+    }
+<h5>Total Done: @Model.TotalComplete</h5>
+<table class="table">
+    <thead>
+        <tr>
+            <th style="width: 100px;">Actions</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var task in Model.CompleteTasks)
+    {
+        <tr>
+            <td>
+                <!-- Mark Complete -->
+                <form method="post"
+                      asp-page-handler="Uncomplete"
+                      asp-route-id="@task.Identifier"
+                      class="d-inline">
+                    <button type="submit" style="width: 100px;" class="btn btn-danger btn-sm" title="Mark uncomplete">Uncomplete</button>
+                </form>
+            </td>
+
+
+            <td>
+                <div>
+                    @task.Description
+                </div>
+                <div class="text-muted small">
+                    Completed: @(task.CompletedAt.HasValue ? task.CompletedAt.Value.ToString("d") : "-") | Created: @task.CreatedAt.ToString("d") | Due: @(task.DueAt.HasValue ? task.DueAt.Value.ToString("d") : "-")
+                </div>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

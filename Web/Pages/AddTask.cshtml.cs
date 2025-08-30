@@ -7,6 +7,8 @@ namespace Web.Pages;
 
 public class AddTaskModel : PageModel
 {
+    private readonly ILogger<AddTaskModel> _logger;
+
     private readonly ITaskService _taskService;
 
     [BindProperty]
@@ -15,8 +17,9 @@ public class AddTaskModel : PageModel
     [BindProperty]
     public DateTimeOffset? DueAt { get; set; }
 
-    public AddTaskModel(ITaskService taskService)
+    public AddTaskModel(ILogger<AddTaskModel> logger, ITaskService taskService)
     {
+        _logger = logger;
         _taskService = taskService;
     }
 
